@@ -1,4 +1,4 @@
-# Métodos de clasificación
+1# Métodos de clasificación
 
 Veremos un resumen de todos los métodos que hemos visto incluyendo Knn y Naive Bayes. Tened en cuenta que es un método de clasificación multiclase con más de 2 niveles.
 
