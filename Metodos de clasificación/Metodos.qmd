@@ -1,0 +1,305 @@
+1# Métodos de clasificación
+
+Veremos un resumen de todos los métodos que hemos visto incluyendo Knn y Naive Bayes. Tened en cuenta que es un método de clasificación multiclase con más de 2 niveles.
+
+## Cargamos librerías
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+library(dplyr)
+library(glmnet) ## regresiones logisitcas, lasso
+library(caret) ### bayes y knn
+library(e1071) ## bayes
+
+```
+
+## Cargamos datos
+
+```{r}
+# quitamos la primera columna
+datos <- read.table("./yeast.data",header = F)[,-1]
+
+```
+
+## Normalizaciones
+
+Creamos las funciones que vamos a necesitar, es decir las funciones de transformación
+
+```{r}
+min.max.mean <- function(X) apply(X,2,function(x) (x-mean(x))/(max(x)-min(x)))
+min.max.median <- function(X) apply(X,2,function(x) (x-median(x))/(max(x)-min(x)))
+min.max <- function(X) apply(X,2,function(x) (x-min(x))/(max(x)-min(x)))
+zscore <- function(X) apply(X,2,function(x) (x-mean(x))/sd(x))
+l2 <- function(X) apply(X,2,function(x) x/sqrt(sum(x^2))) 
+
+
+
+```
+
+## Saca valores numericos y correlaciona los metodos
+
+Para hacer las transformaciones, solamente necesitamos las variables numéricas unicamente y elimina los carácteres que los transforma en clases con el nombre (Var#).
+
+```{r}
+datos <- as.data.frame(datos)
+datos.numericos <- datos[, which(unlist(lapply(datos, is.numeric)))]
+clase <- datos$V10 <- as.factor(datos$V10)
+colnames(datos.numericos) <- paste0("Var", rep(1:8))
+### procedemos a crear una lista con todas las transformaciones
+
+datos.lista <- list(
+  raw = bind_cols(datos.numericos,clase=clase),
+  zscore = bind_cols(zscore(datos.numericos),
+                     clase = clase),
+  l2 = bind_cols(l2(datos.numericos), clase = clase),
+  media = bind_cols(min.max.mean(datos.numericos), clase =
+                      clase),
+  mediana = bind_cols(min.max.median(datos.numericos), clase =
+                        clase),
+  min_max = bind_cols(min.max(datos.numericos),
+  clase = clase))
+
+```
+
+## Partición de datos
+
+NOTA: PODEMOS CREAR LA PARTICIÓN CON `caret` o a mano, el 70 porciento de los datos. A mano sería
+
+```{r}
+set.seed(123456789)
+n  <- nrow(datos)
+idx <- sample(1:n,n*0.7)
+### para conjunto de datos podemos realizar el split
+datos.train.lista <- lapply(datos.lista, function(x) x[idx,])
+datos.test.lista <- lapply(datos.lista, function(x) x[-idx,])
+
+```
+
+### Ejemplo regresión logística
+
+https://rstudio-pubs-static.s3.amazonaws.com/38437_18a39a6487134d67b5f5e0d47221ec8d.html
+
+https://rpubs.com/jkylearmstrong/logit_w\_caret
+
+#### ***REGRESION LOGISTICA: multinom***
+
+```{r}
+set.seed(123456789)
+trControl <- trainControl(method = 'cv',
+                          number = 10)
+myfnlog <- function(x) train(clase ~ ., data = x, method = "multinom", trControl = trControl, trace = F)
+
+logistica.lista <- lapply(datos.train.lista,myfnlog)
+
+logisita.pred <- vector("list",length = length(datos.lista))
+
+for(l in 1:length(datos.lista)){
+  
+  logisita.pred[[l]] <- predict(logistica.lista[[l]],datos.test.lista[[l]])
+  
+  
+}
+
+names(logisita.pred) <- names(datos.lista)
+accuracy.rl <- vector("numeric",length = length(datos.lista))
+
+for(l in 1:length(datos.lista)){
+  
+  accuracy.rl[l] <- confusionMatrix(datos.test.lista$raw$clase,logisita.pred[[l]])$overall[1]
+  
+  
+}
+
+names(accuracy.rl) <- names(datos.lista)
+
+### Este valor lo tienen que guardar solamente haremos por accuracy y kappa
+### tenemos que mirar el objeto matconf
+
+```
+
+#### ***LASSO: glmnet (alpha=1)***
+
+```{r Warning=FALSE}
+set.seed(123456789)
+#set.seed(1239)
+
+trControl <- trainControl(method = 'cv', number = 5)
+myfnlss <- function(x) train(clase ~ ., data = x, method = "glmnet", trControl = trControl,tuneGrid = expand.grid(alpha = 1, lambda = seq(0, 1, by = 0.001)), trace = F)
+
+lss.lista <- lapply(datos.train.lista,myfnlss)
+
+lss.pred <- vector("list",length = length(datos.lista))
+
+for(l in 1:length(datos.lista)){
+  
+  lss.pred[[l]] <- predict(lss.lista[[l]],datos.test.lista[[l]])
+  
+  
+}
+
+names(lss.pred) <- names(datos.lista)
+accuracy.lss <- vector("numeric",length = length(datos.lista))
+
+for(l in 1:length(datos.lista)){
+  
+  accuracy.lss[l] <- confusionMatrix(datos.test.lista$raw$clase,lss.pred[[l]])$overall[1]
+  
+  
+}
+
+names(accuracy.lss) <- names(datos.lista)
+
+### Este valor lo tienen que guardar solamente haremos por accuracy y kappa
+### tenemos que mirar el objeto matconf
+
+```
+
+#### ***RIDGE: glmnet (alpha=0)***
+
+```{r Warning=FALSE}
+set.seed(123456789)
+#set.seed(1239)
+
+trControl <- trainControl(method = 'cv', number = 5)
+myfnrdg <- function(x) train(clase ~ ., data = x, method = "glmnet", trControl = trControl,tuneGrid = expand.grid(alpha = 0, lambda = seq(0, 1, by = 0.001)), trace = F)
+
+rdg.lista <- lapply(datos.train.lista,myfnrdg)
+
+rdg.pred <- vector("list",length = length(datos.lista))
+
+for(l in 1:length(datos.lista)){
+  
+  rdg.pred[[l]] <- predict(rdg.lista[[l]],datos.test.lista[[l]])
+  
+  
+}
+
+names(rdg.pred) <- names(datos.lista)
+accuracy.rdg <- vector("numeric",length = length(datos.lista))
+
+for(l in 1:length(datos.lista)){
+  
+  accuracy.rdg[l] <- confusionMatrix(datos.test.lista$raw$clase,rdg.pred[[l]])$overall[1]
+  
+  
+}
+
+names(accuracy.rdg) <- names(datos.lista)
+
+### Este valor lo tienen que guardar solamente haremos por accuracy y kappa
+### tenemos que mirar el objeto matconf
+
+```
+
+#### ***KNN: knn***
+
+```{r Warning=FALSE}
+set.seed(123456789)
+#set.seed(1239)
+
+trControl <- trainControl(method = 'cv', number = 5)
+myfnknn <- function(x) train(clase ~ ., data = x, method = "knn",trControl = trControl, tuneLength = 20)
+
+knn.lista <- lapply(datos.train.lista,myfnknn)
+
+knn.pred <- vector("list",length = length(datos.lista))
+
+for(l in 1:length(datos.lista)){
+  
+  knn.pred[[l]] <- predict(knn.lista[[l]],datos.test.lista[[l]])
+  
+  
+}
+
+names(knn.pred) <- names(datos.lista)
+accuracy.knn <- vector("numeric",length = length(datos.lista))
+
+for(l in 1:length(datos.lista)){
+  
+  accuracy.knn[l] <- confusionMatrix(datos.test.lista$raw$clase,knn.pred[[l]])$overall[1]
+  #accuracy.knn[l] <- confusionMatrix(knn.pred[[l]],datos.test.lista$raw$clase)
+  
+}
+
+names(accuracy.knn) <- names(datos.lista)
+
+### Este valor lo tienen que guardar solamente haremos por accuracy y kappa
+### tenemos que mirar el objeto matconf
+
+```
+
+#### ***NAIVE BAYES: nb***
+
+```{r Warning=FALSE}
+set.seed(123456789)
+#set.seed(1239)
+
+trControl <- trainControl(method = 'cv', number = 5)
+myfnbys <- function(x) train(clase ~ ., data = x, method = "nb",trControl = trControl)
+
+bys.lista <- lapply(datos.train.lista,myfnbys)
+
+bys.pred <- vector("list",length = length(datos.lista))
+
+for(l in 1:length(datos.lista)){
+  
+  bys.pred[[l]] <- predict(bys.lista[[l]],datos.test.lista[[l]])
+  
+  
+}
+
+names(bys.pred) <- names(datos.lista)
+
+accuracy.bys <- vector("numeric",length = length(datos.lista))
+specificity.bys <- vector("numeric",length = length(datos.lista))
+
+for(l in 1:length(datos.lista)){
+  
+  accuracy.bys[l] <- confusionMatrix(datos.test.lista$raw$clase,bys.pred[[l]])$overall[1]
+  #specificity.bys[l] <- confusionMatrix(datos.test.lista$raw$clase,bys.pred[[l]])$specificity[1]
+  
+}
+
+names(accuracy.bys) <- names(datos.lista)
+names(specificity.bys) <- names(datos.lista)
+
+### Este valor lo tienen que guardar solamente haremos por accuracy y kappa
+### tenemos que mirar el objeto matconf
+
+```
+
+#### ***MATRIZ: Accuracy***
+
+```{r}
+### Creamos la matriz de accuracy completa
+matriz_completa <- matrix(c(accuracy.rl, accuracy.lss, accuracy.rdg, accuracy.knn, accuracy.bys),
+                 ncol = 30, nrow = 5)
+
+### Creamos la matriz reducida de accuracy
+matriz <- matrix(c(accuracy.rl, accuracy.lss, accuracy.rdg, accuracy.knn, accuracy.bys),
+                 ncol = 5, nrow = 5)
+
+### Nombramos las filas de la matriz completa
+rownames(matriz_completa) <- c("R.Logística", "Lasso", "Ridge", "KNN", "N.Bayes")
+
+### Nombramos las filas de la matriz reducida
+rownames(matriz) <- c("R.Logística", "Lasso", "Ridge", "KNN", "N.Bayes")
+colnames(matriz) <- c("n1", "n2", "n3", "n4", "n5")
+
+### Encuentra valores maximos y minimos de la matriz reducida
+Metodo_Valor_Minimo <- min(matriz)
+Metodo_Valor_Maximo <- max(matriz)
+
+### Selecciona la fila de referencia de la matriz reducida para encontrar el mejor metodo
+referencia <- matriz[,"n5"]
+
+### Mostramos los valores en consola
+matriz_completa
+matriz
+
+referencia
+Metodo_Valor_Minimo
+Metodo_Valor_Maximo
+
+```
