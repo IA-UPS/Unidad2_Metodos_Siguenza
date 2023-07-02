@@ -1,0 +1,324 @@
+---
+title: "SVM (Support Vector Machine)"
+author: "Juan Narváez-Daniela Sigüenza"
+format: html
+editor: visual
+
+subtitle: '`r params$subtitulo`'
+date: '`r format(Sys.Date(),"%e de %B, %Y")`'
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+    toc: true
+    highlight: zenburn
+    number_sections: true
+    df_print: kable
+    extra_dependencies: ["float"]
+  html_document:
+    toc: true
+    toc_float: true
+    theme: united
+    number_sections: true
+    df_print: kable
+    highlight: zenburn
+params:
+  
+  myfile: "diabetes.csv"
+  folder.data: data
+  p.train: '!r 2/3'
+  seed.train: 12345
+  seed.clsfier: 1234567
+link-citations: true
+linkcolor: blue
+knit: (function(inputFile,params.,encoding="UTF-8") {
+  
+    rmarkdown::render(input=inputFile,
+      output_format=c("pdf_document","html_document"),
+      output_dir="./renderized",
+      encoding = encoding,
+      )
+      }
+      )
+      
+      output_file = c(paste0(tools::file_path_sans_ext(inputFile),
+      ".pdf"),paste0(tools::file_path_sans_ext(inputFile),".html"))
+editor_options: 
+  chunk_output_type: inline
+  markdown: 
+    wrap: 72
+---
+
+# Flujo de trabajo para detectar diabetes 
+
+*El siguiente código establece las opciones de configuración
+predeterminadas para los fragmentos de código en el entorno de RStudio
+utilizando el paquete knitr; afectan la forma en que se muestra y
+procesa el código en los fragmentos de RMarkdown cuando se generen
+informes o documentos a partir del código.*
+
+```{r}
+
+knitr::opts_chunk$set(comment = NA, prompt = TRUE, tidy.opts=list(width.cutoff=60),tidy=TRUE, 
+               fig.width = 7, fig.height = 7,echo = TRUE, 
+               message = FALSE, warning = FALSE, cache=T, out.extra = "")
+
+```
+
+# Paso 1. Recolectar datos y transformar
+
+## 1.1. Cargamos librerías
+
+*A continuación se genera un bloque de revisión, instalación e
+implementación de las librerias necesarias para poder realizar el
+programa.*
+
+```{r}
+
+libraries <- c("reshape2", "ggplot2", "kernlab" ,"caret")
+check.libraries <- is.element(libraries, installed.packages()[, 1])==FALSE
+libraries.to.install <- libraries[check.libraries]
+
+if (length(libraries.to.install!=0)) {install.packages(libraries.to.install)}
+success <- sapply(libraries,require, quietly = FALSE,  character.only = TRUE)
+
+if(length(success) != length(libraries)) {stop("Un paquete no ha devuelto un éxito en la función require().")}
+```
+
+## 1.2. Cargar datos
+
+*Posterior cargamos la base de datos referente a tumores de colon y
+realizamos un summary proporciona información descriptiva clave.*
+
+```{r}
+
+datos <- read.csv("./diabetes.csv",header = T, sep=",") 
+head(datos)
+
+#Estadística descriptiva de la base de datos
+summary (datos)
+```
+
+## 1.3. Diagrama de Cajas
+
+*A continuación se realiza el diagrama de cajas para visualizar la
+distribución y resumir las principales características de un conjunto de
+datos numéricos.*
+
+*El diagrama de caja en R se realiza con la función "boxplot", que toma
+como argumento uno o varios vectores numéricos. Al graficar un diagrama
+de caja, se muestra la mediana como una línea en el centro de la caja,
+los cuartiles superior e inferior como los bordes superior e inferior de
+la caja, y los valores atípicos como puntos fuera de los bigotes.*
+
+```{r}
+#Diagrama de Caja general de los datos crudos
+boxplot(datos$Pregnancies, datos$Glucose, datos$BloodPressure, datos$SkinThickness, datos$Insulin, datos$BMI, datos$DiabetesPedigreeFunction, datos$Age, col = c("orange3", "yellow3", "green3", "skyblue", "red", "brown", "blue", "pink"))
+```
+
+*El siguente código transforma la última columna de la matriz de datos y
+la convierte en un factor. Posterior a ello, se crea un gráfico de
+densidad basado en los datos moldeados "X.melt", se aplica una
+transformación logarítmica a los datos en "X" y combina la matriz de
+características "X" y el vector de clases "clases" en una nueva matriz
+"datos.log".*
+
+```{r}
+#Transformación de los datos
+clases <- as.factor(datos[, ncol(datos)])
+X <- datos[, -ncol(datos)]
+X.melt <- melt((log2(X)))
+
+#Genera un gráfico de densidad 
+p <- ggplot(aes(x = value, colour = variable), data = X.melt)
+p + geom_density(show.legend = F)
+X.log <- log2(X)
+datos.log <- cbind(X, clases)
+class(datos.log)
+```
+
+# Paso 2. Dividir los datos en entrenamiento y prueba
+
+*Generamos la división entre datos de entrenamiento y de prueba con la
+semilla de aleatorización establecida anteriormente en parámetros.*
+
+```{r}
+
+n <- nrow(datos)
+set.seed(12345)
+
+train <- sample(n, floor(n * 0.6666667))
+datos.train <- datos.log[train, ] #Datos de entrenamiento 
+datos.test <- datos.log[-train, ] #Datos de prueba
+```
+
+# Paso 3. Entrenamiento del modelo
+
+*Se realiza el entrenamiento del modelo de Máquina de Vectores de
+Soporte (SVM) con el kernel especificado, usando la configuración de los
+parámetros por defecto del kernel.*
+
+```{r}
+clasifier.lineal <- ksvm(clases ~ ., data = datos.train, kernel = "vanilladot")
+clasifier.gauss <- ksvm(clases ~ ., data = datos.train, kernel = "rbfdot")
+```
+
+*Se utiliza para problemas de clasificación lineal, donde se busca
+encontrar un hiperplano que pueda separar las clases de manera lineal en
+el espacio de características.*
+
+```{r}
+
+clasifier.lineal
+```
+
+*Este kernel es útil cuando los datos no son linealmente separables en
+el espacio de características y se busca una separación no lineal;
+asigna los puntos a un espacio de mayor dimensionalidad donde pueden ser
+separados linealmente.*
+
+```{r}
+
+clasifier.gauss
+```
+
+# Paso 4. Evaluación del rendimiento del modelo
+
+*A continuación, utilizamos el clasificador lineal, se realiza la
+predicción en el conjunto de datos de prueba. Se crea una tabla de
+contingencia comparando las predicciones obtenidas con el clasificador
+lineal y las verdaderas clases del conjunto de datos de prueba.*
+
+*Utilizamos el clasificador gaussiano, se realiza la predicción en el
+conjunto de datos de prueba. Se crea una tabla de contingencia
+comparando las predicciones obtenidas con el clasificador gaussiano y
+las verdaderas clases del conjunto de datos de prueba.*
+
+```{r}
+
+prediction.linear <- predict(clasifier.lineal, datos.test)
+
+
+res.linear <- table(prediction.linear, datos.test$clases)
+
+
+prediction.gauss <- predict(clasifier.gauss, datos.test)
+
+
+res.gauss <- table(prediction.gauss, datos.test$clases)
+```
+
+*Calcula la matriz de confusión utilizando los resultados del
+clasificador lineal, considerando la clase "1" como la clase positiva.*
+
+```{r}
+
+(cmatrix1 <- confusionMatrix(res.linear, positive = "1"))
+```
+
+*Se calcula la matriz de confusión utilizando los resultados del
+clasificador gaussiano, considerando la clase "1" como la clase
+positiva.*
+
+```{r}
+
+(cmatrix2 <- confusionMatrix(res.gauss, positive = "1"))
+```
+
+# Paso 5. Situaciones:
+
+## 5.1. Validación cruzada quíntuple
+
+*El siguiente código entrena un modelo de SVM lineal en los datos de
+entrenamiento y luego muestra un resumen de este modelo entrenado,
+brindando información importante sobre su rendimiento y ajuste.*
+
+```{r}
+model.5v.linear <- train(clases ~ ., datos.train, method = "svmLinear",
+trControl = trainControl(method = "cv", number = 5), tuneGrid = NULL,
+tuneLength = 10, trace = FALSE)
+
+summary(model.5v.linear)
+   
+```
+
+*El siguiente código realiza predicciones utilizando el modelo entrenado
+en los datos de prueba y compara estas predicciones con las clases
+reales. Luego, se genera una matriz de confusión para evaluar el
+rendimiento del modelo en términos de clasificaciones correctas e
+incorrectas.*
+
+*Se calcula la matriz de confusión utilizando los resultados del
+clasificador gaussiano, considerando la clase "1" como la clase
+positiva.*
+
+```{r}
+prediction <- predict(model.5v.linear, datos.test) # prediccion
+res.linear.2 <- table(prediction, datos.test$clases) # comparacion
+
+
+confusionMatrix(res.linear.2, positive = "1")
+```
+
+*Se entrena un modelo de SVM radial en los datos de entrenamiento y
+luego muestra un resumen de este modelo entrenado, brindando información
+relevante sobre su rendimiento.*
+
+```{r}
+ # modelo 5-crossvalidation
+model.5v.radial <- train(clases ~ ., datos.train, method = "svmRadial",
+trControl = trainControl(method = "cv", number = 5), tuneGrid = NULL,
+tuneLength = 10, trace = FALSE)
+
+summary(model.5v.radial)
+
+```
+
+*El código realiza predicciones utilizando el modelo entrenado en los
+datos de prueba y compara estas predicciones con las clases reales.
+Luego, se genera una matriz de confusión para evaluar el rendimiento del
+modelo en términos de clasificaciones correctas e incorrectas.*
+
+*Se calcula la matriz de confusión utilizando los resultados del
+clasificador gaussiano, considerando la clase "1" como la clase
+positiva.*
+
+```{r}
+prediction <- predict(model.5v.radial, datos.test) # prediccion
+res.radial.2 <- table(prediction, datos.test$clases) # comparacion
+
+confusionMatrix(res.radial.2, positive = "1")
+
+```
+
+## 5.2. Bootstrap
+
+*El código proporcionado entrena un modelo de clasificación utilizando
+el algoritmo de SVM lineal en los datos de entrenamiento y luego muestra
+un resumen del modelo entrenado. El modelo se ajusta utilizando la
+fórmula "clases \~.", lo que implica que la variable de clase "clases"
+está relacionada con todas las demás variables presentes en los datos de
+entrenamiento.*
+
+```{r}
+model.bootstrap.linear <- train(clases ~ ., datos.train, method = "svmLinear",
+trace = FALSE) # train
+
+summary(model.bootstrap.linear)
+```
+
+*El código realiza predicciones utilizando el modelo entrenado en los
+datos de prueba y compara estas predicciones con las clases reales.
+Luego, se genera una matriz de confusión para evaluar el rendimiento del
+modelo en términos de clasificaciones correctas e incorrectas.*
+
+*Se calcula la matriz de confusión utilizando los resultados del
+clasificador gaussiano, considerando la clase "1" como la clase
+positiva.*
+
+```{r}
+prediction <- predict(model.bootstrap.linear, datos.test)
+res.gauss.2  <- table(prediction, datos.test$clases)
+
+confusionMatrix(res.gauss.2, positive = "1")
+```
