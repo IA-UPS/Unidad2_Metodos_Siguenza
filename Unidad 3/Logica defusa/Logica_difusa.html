@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Juan Narváez - Daniela Sigüenza">
+
+<title>Logica_difusa</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="Logica_difusa_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Logica_difusa_files/libs/quarto-html/quarto.js"></script>
+<script src="Logica_difusa_files/libs/quarto-html/popper.min.js"></script>
+<script src="Logica_difusa_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Logica_difusa_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Logica_difusa_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Logica_difusa_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Logica_difusa_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Logica_difusa_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Logica_difusa_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Logica_difusa</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Juan Narváez - Daniela Sigüenza </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="lógica-difusa" class="level1">
+<h1>Lógica Difusa</h1>
+<p>La lógica difusa es un enfoque de razonamiento y toma de decisiones que permite trabajar con la incertidumbre y la imprecisión presentes en muchos sistemas y situaciones del mundo real. A diferencia de la lógica clásica, que se basa en valores binarios (verdadero/falso), la lógica difusa permite representar y manipular la información imprecisa utilizando conjuntos difusos y grados de pertenencia.</p>
+<section id="características" class="level2">
+<h2 class="anchored" data-anchor-id="características">Características</h2>
+<p>El Principio de Incompatibilidad dice que la descripción del comportamiento de un sistema complejo no puede realizarse de forma absolutamente precisa. Para solucionar este problema Zadeh plantea la necesidad de obtener herramientas capaces de manejar de forma rigurosa y fiable información imprecisa, lo cual obliga a desarrollar dos aspectos:</p>
+<ul>
+<li><strong><em>Representación de la información imprecisa</em></strong></li>
+</ul>
+<p>Se emplea de la Teoría de conjuntos difusos. Así como describir la experiencia de los sistemas complejos en sus relaciones entrada-salida mediante proposiciones condicionales del tipo Si-Entonces de manera que las variables de entrada y las variables de salida quedan ligadas.</p>
+<ul>
+<li><strong><em>Inferencia sobre información imprecisa</em></strong></li>
+</ul>
+<p>Método de inferencia generalizado e introduce lo que se conoce como Regla Composicional de Inferencia.</p>
+<p>A partir de este principio, se pueden describir las principales características esenciales de la lógica difusa y los sistemas difusos:</p>
+<ol type="1">
+<li><p>Mediante lógica difusa se puede formular el conocimiento humano de una forma sistemática, y puede ser fácilmente incluido en sistemas de ingeniería.</p></li>
+<li><p>El conocimiento se interpreta como una colección de restricciones difusas sobre una colección de variables. Los sistemas difusos son especialmente interesantes para la definición de sistemas cuyo modelo exacto es difícil de obtener.</p></li>
+<li><p>La inferencia puede verse como un proceso de propagación de estas restricciones difusas.</p></li>
+<li><p>Se utiliza ampliamente en sistemas de ayuda a la decisión. La lógica difusa permite obtener decisiones con valores incompletos o información incierta.</p></li>
+</ol>
+</section>
+<section id="aplicaciones" class="level2">
+<h2 class="anchored" data-anchor-id="aplicaciones">Aplicaciones</h2>
+<p>En muchas áreas de aplicación, se reduce significativamente la necesidad de operadores que basen su conocimiento en la experiencia, el cual difícilmente podría ser expresado mediante ecuaciones diferenciales. De esta manera, si se dispone de conocimiento sobre el proceso, es posible modelarlo utilizando lógica difusa.</p>
+<p>Los sistemas basados en lógica difusa son fáciles de diseñar, modificar y mantener. A pesar de la pérdida de precisión, la reducción en el tiempo de desarrollo y mantenimiento es muy relevante para su uso en el ámbito industrial.</p>
+</section>
+<section id="conjuntos-difusos" class="level2">
+<h2 class="anchored" data-anchor-id="conjuntos-difusos">Conjuntos difusos</h2>
+<p>Un conjunto difuso puede definirse como una clase en la que hay una progresión gradual desde la pertenencia al conjunto hasta la no pertenencia; o visto de otra forma, en la que un objeto puede tener un grado de pertenencia definido entre la pertenencia total (valor uno) o no pertenencia (valor cero).</p>
+<section id="operaciones-de-conjuntos-difusos" class="level3">
+<h3 class="anchored" data-anchor-id="operaciones-de-conjuntos-difusos">Operaciones de conjuntos difusos</h3>
+<ul>
+<li><strong><em>Union</em></strong></li>
+</ul>
+<p>La unión de dos conjuntos difusos A y B se calcula tomando el máximo grado de pertenencia entre los elementos correspondientes. Esto representa los elementos que pertenecen a al menos uno de los conjuntos difusos.</p>
+<ul>
+<li><strong><em>Intersección</em></strong></li>
+</ul>
+<p>La intersección de dos conjuntos difusos A y B se calcula tomando el mínimo grado de pertenencia entre los elementos correspondientes. Esto representa los elementos que pertenecen a ambos conjuntos difusos.</p>
+<ul>
+<li><strong><em>Complemento</em></strong></li>
+</ul>
+<p>El complemento de un conjunto difuso A se obtiene asignando a cada elemento su grado complementario de pertenencia, es decir, 1 menos el grado de pertenencia original. Esto representa los elementos que no pertenecen al conjunto difuso A.</p>
+</section>
+<section id="propiedades" class="level3">
+<h3 class="anchored" data-anchor-id="propiedades">Propiedades</h3>
+<p>Los conjuntos Crisp y los difusos tienen las mismas propiedades (en realidad los conjuntos crisp pueden verse como un subconjunto de los conjuntos difusos).</p>
+<ul>
+<li><p>Conmutativa: A ∩ B = B ∩ A</p></li>
+<li><p>Asociativa: A ∪ (B ∪ C) = (A ∪ B) ∪ C</p></li>
+<li><p>Distributiva: A ∪ (B ∩ C) = (A ∪ B) ∩ (A ∪ C)</p></li>
+<li><p>Idempotencia: A ∪ A = A y A ∩ A = A</p></li>
+<li><p>Involución: ¬(¬A) = A</p></li>
+<li><p>Transitiva: If(A ⊂ B) ∩ (B ⊂ C) then A ⊂ C</p></li>
+<li><p>Leyes de Morgan: ¬(A ∩ B) = ¬A ∪ ¬B y ¬(A ∪ B) = ¬A ∩ ¬B</p></li>
+</ul>
+</section>
+<section id="representación-de-conjuntos-difusos" class="level3">
+<h3 class="anchored" data-anchor-id="representación-de-conjuntos-difusos">Representación de conjuntos difusos</h3>
+<p>Para representar un conjunto difuso continuo en un ordenador necesitamos expresar esa función de pertenencia y mapear los elementos del conjunto con su grado de pertenencia. Un método habitual es preguntar a un experto sobre el dominio del problema y representarlo mediante diferentes funciones (típicamente triangulares y trapezoidales). También se pueden utilizar, como veremos más adelante, funciones curvas o la función singleton.</p>
+</section>
+</section>
+<section id="razonamiento-aproximado" class="level2">
+<h2 class="anchored" data-anchor-id="razonamiento-aproximado">Razonamiento aproximado</h2>
+<p>Cuando el número de hechos y reglas aumenta, el sistema tiene que poder verificar gran cantidad de hechos que surgen en las etapas de razonamiento. A continuación estudiaremos el concepto de Regla Difusa empleada en Razonamiento Aproximado.</p>
+<section id="reglas-difusas" class="level3">
+<h3 class="anchored" data-anchor-id="reglas-difusas">Reglas difusas</h3>
+<p>El razonamiento aproximado se utiliza para representar y razonar con conocimiento expresado en forma de primitivas atómicas, enunciadas en lenguaje natural. Por ejemplo "La velocidad tiene un valor positivo grande".</p>
+</section>
+</section>
+<section id="inferencia-difusa" class="level2">
+<h2 class="anchored" data-anchor-id="inferencia-difusa">Inferencia difusa</h2>
+<p>La inferencia difusa puede definirse como el proceso de obtener un valor de salida para un valor de entrada empleando la teoría de conjuntos difusos.</p>
+<section id="inferencia-de-mamdani" class="level3">
+<h3 class="anchored" data-anchor-id="inferencia-de-mamdani">Inferencia de Mamdani</h3>
+<p>El proceso se realiza en cuatro pasos:</p>
+<ol type="1">
+<li><p>Fuzificación de las variables de entrada.</p></li>
+<li><p>Evaluación de las reglas.</p></li>
+<li><p>Agregación de las salidas de las reglas.</p></li>
+<li><p>Defuzificación.</p></li>
+</ol>
+<p>Veamos a continuación las etapas de inferencia</p>
+<ol type="1">
+<li><p><strong><em>Fuzificación.</em></strong> El primer paso consiste en tomar los valores crisp de las entradas (financiacion-del-proyecto y plantilla-del-proyecto) y determinar el grado de pertenencia de estas entradas a los conjuntos difusos asociados.</p></li>
+<li><p><strong><em>Evaluación de Reglas.</em></strong> Tomamos las entradas anteriores y se aplican a los antecedentes de las reglas difusas. Si una regla tiene múltiples antecedentes, se utiliza el operador AND u OR para obtener un único número que represente el resultado de la evaluación. Este número (el valor de verdad) se aplica al consecuente.</p></li>
+<li><p><strong><em>Agregación de las salidas.</em></strong> La agregación es el proceso de unificación de las salidas de todas las reglas; es decir, se combinan las funciones de pertenencia de todos los consecuentes previamente recortados o escalados, combinando para obtener un único conjunto difuso por cada variable de salida.</p></li>
+<li><p><strong><em>. Defuzificación.</em></strong> El resultado final habitualmente es necesario expresarlo mediante un valor crisp. En esta etapa se toma como entrada el conjunto difuso anteriormente obtenido para dar un valor de salida.</p></li>
+</ol>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
