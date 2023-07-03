@@ -1,0 +1,116 @@
+---
+title: "Logica_difusa"
+author: "Juan Narváez - Daniela Sigüenza"
+format: html
+editor: visual
+---
+
+# Lógica Difusa
+
+La lógica difusa es un enfoque de razonamiento y toma de decisiones que permite trabajar con la incertidumbre y la imprecisión presentes en muchos sistemas y situaciones del mundo real. A diferencia de la lógica clásica, que se basa en valores binarios (verdadero/falso), la lógica difusa permite representar y manipular la información imprecisa utilizando conjuntos difusos y grados de pertenencia.
+
+## Características
+
+El Principio de Incompatibilidad dice que la descripción del comportamiento de un sistema complejo no puede realizarse de forma absolutamente precisa. Para solucionar este problema Zadeh plantea la necesidad de obtener herramientas capaces de manejar de forma rigurosa y fiable información imprecisa, lo cual obliga a desarrollar dos aspectos:
+
+-   ***Representación de la información imprecisa***
+
+Se emplea de la Teoría de conjuntos difusos. Así como describir la experiencia de los sistemas complejos en sus relaciones entrada-salida mediante proposiciones condicionales del tipo
+Si-Entonces de manera que las variables de entrada y las variables de salida quedan ligadas.
+
+-   ***Inferencia sobre información imprecisa***
+
+Método de inferencia generalizado e introduce lo que se conoce como Regla Composicional de Inferencia.
+
+A partir de este principio, se pueden describir las principales características esenciales de la lógica difusa y los sistemas difusos:
+
+1.  Mediante lógica difusa se puede formular el conocimiento humano de una forma sistemática, y puede ser fácilmente incluido en sistemas de ingeniería.
+
+2.  El conocimiento se interpreta como una colección de restricciones difusas sobre una colección de variables. Los sistemas difusos son especialmente interesantes para la definición de sistemas
+    cuyo modelo exacto es difícil de obtener.
+
+3.  La inferencia puede verse como un proceso de propagación de estas restricciones difusas.
+
+4.  Se utiliza ampliamente en sistemas de ayuda a la decisión. La
+    lógica difusa permite obtener decisiones con valores incompletos
+    o información incierta.
+
+## Aplicaciones 
+
+En muchas áreas de aplicación, se reduce significativamente la necesidad de operadores que basen su conocimiento en la experiencia, el cual difícilmente podría ser expresado mediante ecuaciones diferenciales. De esta manera, si se dispone de conocimiento sobre el proceso, es posible modelarlo utilizando lógica difusa.
+
+Los sistemas basados en lógica difusa son fáciles de diseñar, modificar y mantener. A pesar de la pérdida de precisión, la reducción en el tiempo de desarrollo y mantenimiento es muy relevante para su uso en el ámbito industrial.
+
+## Conjuntos difusos
+
+Un conjunto difuso puede definirse como una clase en la que hay una progresión gradual desde la pertenencia al conjunto hasta la no pertenencia; o visto de otra forma, en la que un objeto puede tener un grado de pertenencia definido entre la pertenencia total (valor uno) o no pertenencia (valor cero).
+
+### Operaciones de conjuntos difusos
+
+-   ***Union***
+
+La unión de dos conjuntos difusos A y B se calcula tomando el máximo grado de pertenencia entre los elementos correspondientes. Esto representa los elementos que pertenecen a al menos uno de los conjuntos difusos.
+
+-   ***Intersección***
+
+La intersección de dos conjuntos difusos A y B se calcula tomando el mínimo grado de pertenencia entre los elementos correspondientes. Esto representa los elementos que pertenecen a ambos conjuntos difusos.
+
+-   ***Complemento***
+
+El complemento de un conjunto difuso A se obtiene asignando a cada elemento su grado complementario de pertenencia, es decir, 1 menos el grado de pertenencia original. Esto representa los elementos que no pertenecen al conjunto difuso A.
+
+### Propiedades
+
+Los conjuntos Crisp y los difusos tienen las mismas propiedades (en realidad los conjuntos crisp pueden verse como un subconjunto de los conjuntos difusos).
+
+-   Conmutativa: A ∩ B = B ∩ A
+
+-   Asociativa: A ∪ (B ∪ C) = (A ∪ B) ∪ C
+
+-   Distributiva: A ∪ (B ∩ C) = (A ∪ B) ∩ (A ∪ C)
+
+-   Idempotencia: A ∪ A = A y A ∩ A = A
+
+-   Involución: ¬(¬A) = A
+
+-   Transitiva: If(A ⊂ B) ∩ (B ⊂ C) then A ⊂ C
+
+-   Leyes de Morgan: ¬(A ∩ B) = ¬A ∪ ¬B y ¬(A ∪ B) = ¬A ∩ ¬B
+
+### Representación de conjuntos difusos 
+
+Para representar un conjunto difuso continuo en un ordenador necesitamos expresar esa función de pertenencia y mapear los elementos del conjunto con su grado de pertenencia. Un método habitual es preguntar a un experto sobre el dominio del problema y representarlo mediante diferentes funciones (típicamente triangulares y trapezoidales). También se pueden utilizar, como veremos más adelante, funciones curvas o la función singleton.
+
+## Razonamiento aproximado
+
+Cuando el número de hechos y reglas aumenta, el sistema tiene que poder verificar gran cantidad de hechos que surgen en las etapas de razonamiento. A continuación estudiaremos el concepto de Regla Difusa empleada en Razonamiento Aproximado.
+
+### Reglas difusas
+
+El razonamiento aproximado se utiliza para representar y razonar con conocimiento expresado en forma de primitivas atómicas, enunciadas en lenguaje natural. Por ejemplo \"La velocidad tiene un valor positivo grande\".
+
+## Inferencia difusa
+
+La inferencia difusa puede definirse como el proceso de obtener un valor de salida para un valor de entrada empleando la teoría de conjuntos difusos.
+
+### Inferencia de Mamdani
+
+El proceso se realiza en cuatro pasos:
+
+1.  Fuzificación de las variables de entrada.
+
+2.  Evaluación de las reglas.
+
+3.  Agregación de las salidas de las reglas.
+
+4.  Defuzificación.
+
+Veamos a continuación las etapas de inferencia
+
+1.  ***Fuzificación.*** El primer paso consiste en tomar los valores crisp de las entradas (financiacion-del-proyecto y plantilla-del-proyecto) y determinar el grado de pertenencia de estas entradas a los conjuntos difusos asociados.
+
+2.  ***Evaluación de Reglas.*** Tomamos las entradas anteriores y se aplican a los antecedentes de las reglas difusas. Si una regla tiene múltiples antecedentes, se utiliza el operador AND u OR para obtener un único número que represente el resultado de la evaluación. Este número (el valor de verdad) se aplica al consecuente.
+
+3.  ***Agregación de las salidas.*** La agregación es el proceso de unificación de las salidas de todas las reglas; es decir, se combinan las funciones de pertenencia de todos los consecuentes previamente recortados o escalados, combinando para obtener un único conjunto difuso por cada variable de salida.
+
+4.  ***. Defuzificación.*** El resultado final habitualmente es necesario expresarlo mediante un valor crisp. En esta etapa se toma como entrada el conjunto difuso anteriormente obtenido para dar un valor de salida.
